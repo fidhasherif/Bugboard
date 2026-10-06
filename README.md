@@ -14,7 +14,7 @@ I'm a QA engineer by background, so I built the kind of tool I wished I had.
 - [x] User login with JWT
 - [x] Protected routes using middleware
 - [ ] Projects
-- [ ] Bug CRUD (create, read, update, delete)
+- [x] Bug CRUD (create, read, update, delete)
 - [ ] Dashboard
 - [ ] React frontend
 
@@ -24,6 +24,11 @@ I'm a QA engineer by background, so I built the kind of tool I wished I had.
 | POST | /api/auth/signup | Create a new account | No |
 | POST | /api/auth/login | Log in and receive a token | No |
 | GET | /api/auth/me | Get the logged-in user | Yes |
+
+| POST | /api/bugs | Create a new bug | Yes |
+| GET | /api/bugs | List all bugs, newest first | Yes |
+| PATCH | /api/bugs/:id | Update a bug's status | Yes |
+| DELETE | /api/bugs/:id | Delete a bug | Yes |
 
 ## Test Cases
 
@@ -38,9 +43,22 @@ I'm a QA engineer by background, so I built the kind of tool I wished I had.
 | 7 | GET /me with no token | No token, access denied | No token, access denied | Pass |
 | 8 | GET /me with a fake token | Invalid or expired token | Invalid or expired token | Pass |
 | 9 | GET /me with a tampered token | Invalid or expired token | Invalid or expired token | Pass |
+| 10 | Create a bug with valid details | Bug saved with status Open | Bug saved with status Open | Pass |
+| 11 | Create a bug with no title | Title is required | Bug validation failed: title is required | Pass |
+| 12 | Create a bug with no token | No token, access denied | No token, access denied | Pass |
+| 13 | List all bugs | Array of bugs, newest first | Array of bugs, newest first | Pass |
+| 14 | Update status to Fixed | Bug returned with status Fixed | Bug returned with status Fixed | Pass |
+| 15 | Update status to an invalid value (Done) | Validation error | Done is not a valid enum value | Pass |
+| 16 | Delete an existing bug | Bug deleted | Bug deleted | Pass |
 
 ## How to Run Locally
 1. Clone the repo
 2. Run `npm install`
 3. Create a `.env` file with `MONGO_URI` and `JWT_SECRET`
 4. Run `node server.js`
+
+
+## Known Issues / Next Steps
+- Any logged-in user can currently update or delete any bug. Next: only allow the user who reported a bug to change it.
+- Projects feature
+- React frontend
