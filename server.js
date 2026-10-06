@@ -5,6 +5,7 @@
    const app = express();
    app.use(express.json());
    app.use("/api/auth", require("./routes/auth"));
+   app.use("/api/bugs", require("./routes/bugs"));
 
    app.get("/", (req, res) => {
      res.send("Hello from BugBoard!");
