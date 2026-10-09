@@ -27,29 +27,36 @@ router.get("/", protect, async (req, res) => {
 });
 router.patch("/:id", protect, async (req, res) => {
   try {
-    const bug = await Bug.findByIdAndUpdate(
-      req.params.id,
-      { status: req.body.status },
-      { new: true, runValidators: true }
-    );
+    const bug = await Bug.findById(req.params.id);
     if (!bug) {
       return res.status(404).json({ message: "Bug not found" });
     }
+    if (bug.reportedBy.toString() !== req.userId) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+    bug.status = req.body.status;
+    await bug.save();
     res.json(bug);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
+
 router.delete("/:id", protect, async (req, res) => {
   try {
-    const bug = await Bug.findByIdAndDelete(req.params.id);
+    const bug = await Bug.findById(req.params.id);
     if (!bug) {
       return res.status(404).json({ message: "Bug not found" });
     }
+    if (bug.reportedBy.toString() !== req.userId) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+    await bug.deleteOne();
     res.json({ message: "Bug deleted" });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 module.exports = router;
